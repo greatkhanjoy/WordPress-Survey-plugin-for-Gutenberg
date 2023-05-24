@@ -37,8 +37,6 @@ const Survey = ({ data }) => {
       ...formData,
       questions: newQuestions,
     });
-
-    console.log(formData);
   };
 
   const updatePersonalInfo = (e) => {
@@ -50,7 +48,6 @@ const Survey = ({ data }) => {
   const formHandler = (e) => {
     e.preventDefault();
     setSteps(steps + 1);
-    console.log(formData);
   };
 
   useEffect(() => {
@@ -90,7 +87,7 @@ const Survey = ({ data }) => {
             );
           })}
 
-          {steps === totalSteps && <Success />}
+          {steps === totalSteps && <Success data={formData} />}
         </div>
         <div className="flex justify-center gap-2 p-5 bg-gray-200">
           <button

@@ -62,7 +62,7 @@ const ContactForm = ({ data, onChange }) => {
             type="number"
             name="age"
             placeholder="Age"
-            value={data.increment}
+            value={data.age}
             onChange={onChange}
           />
           <label className="flex gap-2 items-center">

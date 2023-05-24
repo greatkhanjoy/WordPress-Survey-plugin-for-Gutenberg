@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const Question = ({ data, onChange }) => {
-  const [multipleChoice, setMultipleChoice] = useState(data.multiple);
+  const [multipleChoice, setMultipleChoice] = useState(data?.multiple);
 
   const [newAnswer, setNewAnswer] = useState(data.answer || []);
 
@@ -25,9 +25,7 @@ const Question = ({ data, onChange }) => {
   }, [newAnswer]);
   return (
     <div className="flex flex-col gap-3 p-4">
-      <h3 className="text-xl leading-normal font-semibold">
-        {data.question} {data.type}
-      </h3>
+      <h3 className="text-xl leading-normal font-semibold">{data.question}</h3>
       <div className="flex flex-col gap-4">
         {data.answers.map((answer, index) => {
           return data.type == "radio" ? (

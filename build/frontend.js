@@ -79,7 +79,7 @@ const ContactForm = _ref => {
     type: "number",
     name: "age",
     placeholder: "Age",
-    value: data.increment,
+    value: data.age,
     onChange: onChange
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
     className: "flex gap-2 items-center"
@@ -124,7 +124,7 @@ const Question = _ref => {
     data,
     onChange
   } = _ref;
-  const [multipleChoice, setMultipleChoice] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(data.multiple);
+  const [multipleChoice, setMultipleChoice] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(data?.multiple);
   const [newAnswer, setNewAnswer] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(data.answer || []);
   const answerHandler = e => {
     if (data.type == "checkbox" && multipleChoice === true) {
@@ -147,7 +147,7 @@ const Question = _ref => {
     className: "flex flex-col gap-3 p-4"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
     className: "text-xl leading-normal font-semibold"
-  }, data.question, " ", data.type), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, data.question), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex flex-col gap-4"
   }, data.answers.map((answer, index) => {
     return data.type == "radio" ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
@@ -193,14 +193,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 
 
-const Success = () => {
+const Success = _ref => {
+  let {
+    data
+  } = _ref;
+  const [submitted, setSubmitted] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [message, setMessage] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("Survey complete! Thank you for your time.");
+  const formHandler = e => {
+    e.preventDefault();
+    setSubmitted(true);
+    setMessage("Form submitted");
+    console.log(data);
+  };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex flex-col gap-3 p-4 min-h-[400px] justify-center mx-auto"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex flex-col gap-4 items-center justify-center"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
     className: "text-3xl leading-normal font-normal"
-  }, "Survey complete! Thank you for you time."), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+  }, message), !submitted && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    onClick: formHandler,
     className: "inline px-6 py-2 text-lg border border-green-600 text-green-600 bg-transparent"
   }, "SUBMIT SURVEY")));
 };
@@ -362,7 +375,6 @@ const Survey = _ref => {
       ...formData,
       questions: newQuestions
     });
-    console.log(formData);
   };
   const updatePersonalInfo = e => {
     setFormData({
@@ -373,7 +385,6 @@ const Survey = _ref => {
   const formHandler = e => {
     e.preventDefault();
     setSteps(steps + 1);
-    console.log(formData);
   };
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     setProgress(Math.round(steps / totalSteps * 100));
@@ -403,7 +414,9 @@ const Survey = _ref => {
       data: question,
       onChange: e => updateAnswer(e, index)
     });
-  }), steps === totalSteps && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_frontend_Success__WEBPACK_IMPORTED_MODULE_5__["default"], null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }), steps === totalSteps && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_frontend_Success__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    data: formData
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex justify-center gap-2 p-5 bg-gray-200"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     onClick: steps <= 1 ? null : () => setSteps(steps - 1),
