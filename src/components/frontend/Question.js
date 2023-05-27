@@ -31,7 +31,10 @@ const Question = ({ data, onChange }) => {
       <div className="flex flex-col gap-4">
         {data.answers.map((answer, index) => {
           return data.type == "radio" ? (
-            <label key={index} className="flex gap-2 items-center">
+            <label
+              key={index}
+              className="flex gap-2 items-center cursor-pointer"
+            >
               <input
                 type="radio"
                 name={data.question}
@@ -43,7 +46,10 @@ const Question = ({ data, onChange }) => {
               <span>{answer}</span>
             </label>
           ) : data.type == "checkbox" ? (
-            <label key={index} className="flex gap-2 items-center">
+            <label
+              key={index}
+              className="flex gap-2 items-center cursor-pointer"
+            >
               <input
                 type="checkbox"
                 name={`${data.question}_${index}`}

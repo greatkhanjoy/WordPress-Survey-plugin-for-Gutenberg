@@ -3,14 +3,14 @@ import React from "react";
 const ContactForm = ({ data, onChange }) => {
   return (
     <div className="flex flex-col gap-3 p-4">
-      <div className="flex gap-4 items-center justify-items-center">
+      <div className="flex flex-col sm:flex-row gap-4 items-center justify-items-center">
         <input
           type="text"
           name="first_name"
           placeholder="First Name"
           value={data.first_name}
           onChange={onChange}
-          className="w-full"
+          className="w-full p-3"
           required
         />
         <select
@@ -30,14 +30,14 @@ const ContactForm = ({ data, onChange }) => {
           </option>
         </select>
       </div>
-      <div className="flex justify-center gap-4 items-center">
+      <div className="flex flex-col sm:flex-row justify-center gap-4 items-center">
         <input
           type="text"
           name="last_name"
           placeholder="Last Name"
           value={data.last_name}
           onChange={onChange}
-          className="w-full"
+          className="w-full p-3"
         />
         <input
           type="number"
@@ -45,46 +45,51 @@ const ContactForm = ({ data, onChange }) => {
           value={data.increment}
           onChange={onChange}
           placeholder="0"
-          className="w-full"
+          className="w-full p-3"
         />
       </div>
-      <div className="flex justify-center gap-4 items-center">
-        <input
-          type="email"
-          name="email"
-          value={data.email}
-          onChange={onChange}
-          placeholder="Your Email"
-          className="w-1/2"
-        />
-        <div className="w-1/2 flex justify-between">
+      <div className="flex w-full flex-col sm:flex-row justify-center gap-4 items-center">
+        <div className="w-full sm:w-1/2">
+          <input
+            type="email"
+            name="email"
+            value={data.email}
+            onChange={onChange}
+            placeholder="Your Email"
+            className="w-full p-3"
+          />
+        </div>
+        <div className="w-full sm:w-1/2 flex flex-col sm:flex-row gap-4">
           <input
             type="number"
             name="age"
             placeholder="Age"
             value={data.increment}
             onChange={onChange}
+            className="p-3 w-full sm:w-1/3"
           />
-          <label className="flex gap-2 items-center">
-            <input
-              type="radio"
-              name="gender"
-              value="male"
-              checked={data.gender === "male"}
-              onChange={onChange}
-            />
-            <span>Male</span>
-          </label>
-          <label className="flex gap-2 items-center">
-            <input
-              type="radio"
-              name="gender"
-              value="female"
-              checked={data.gender === "female"}
-              onChange={onChange}
-            />
-            <span>Female</span>
-          </label>
+          <div className="flex gap-4">
+            <label className="flex gap-2 items-center cursor-pointer">
+              <input
+                type="radio"
+                name="gender"
+                value="male"
+                checked={data.gender === "male"}
+                onChange={onChange}
+              />
+              <span>Male</span>
+            </label>
+            <label className="flex gap-2 items-center cursor-pointer">
+              <input
+                type="radio"
+                name="gender"
+                value="female"
+                checked={data.gender === "female"}
+                onChange={onChange}
+              />
+              <span>Female</span>
+            </label>
+          </div>
         </div>
       </div>
     </div>

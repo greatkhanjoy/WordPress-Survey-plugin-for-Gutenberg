@@ -58,7 +58,7 @@ const Survey = ({ data }) => {
   }, [steps]);
 
   return (
-    <div className="survey-frontend bg-gray-100 border border-gray-200">
+    <div className="survey-frontend bg-gray-100 border border-gray-200 w-full">
       <form onSubmit={formHandler}>
         <div className="bg-gray-200 mx-auto p-5 w-full">
           <h2 className="text-center text-xl leading-normal font-medium">
