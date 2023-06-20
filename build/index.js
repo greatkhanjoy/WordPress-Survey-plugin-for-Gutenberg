@@ -2,6 +2,298 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/components/Modal.jsx":
+/*!**********************************!*\
+  !*** ./src/components/Modal.jsx ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _Modal_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Modal.css */ "./src/components/Modal.css");
+
+
+
+const Modal = _ref => {
+  let {
+    toggle,
+    action,
+    editAction,
+    editField,
+    edit
+  } = _ref;
+  const [name, setName] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [type, setType] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [label, setLabel] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [placeholder, setPlaceholder] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [value, setValue] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [options, setOptions] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([{
+    label: "",
+    value: ""
+  }]); // [{label: '', value: ''}
+  const [required, setRequired] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const changeOptionLabel = (e, index) => {
+    const newOptions = [...options];
+    newOptions[index].label = e.target.value;
+    setOptions(newOptions);
+  };
+  const changeOptionValue = (e, index) => {
+    const newOptions = [...options];
+    newOptions[index].value = e.target.value;
+    setOptions(newOptions);
+  };
+  const addOption = () => {
+    setOptions([...options, {
+      label: "",
+      value: ""
+    }]);
+  };
+  const removeOption = index => {
+    const newOptions = [...options];
+    newOptions.splice(index, 1);
+    setOptions(newOptions);
+  };
+  const resetForm = () => {
+    setName("");
+    setType("");
+    setLabel("");
+    setPlaceholder("");
+    setValue("");
+    setRequired(false);
+    setOptions([{
+      label: "",
+      value: ""
+    }]);
+  };
+  const formHandler = e => {
+    e.preventDefault();
+    if (name === "" || type === "" || label === "") return alert("Please fill all the Fields");
+    if (type === "select" || type === "radio" || type === "checkbox") {
+      if (options.some(option => option.label === "" || option.value === "")) {
+        return alert("Please fill all the Fields");
+      }
+    }
+    const newField = {
+      name,
+      label,
+      type,
+      required,
+      value,
+      placeholder
+    };
+    if (type === "select" || type === "radio" || type === "checkbox") {
+      newField.options = options;
+    }
+    if (edit) {
+      editAction(newField);
+      resetForm();
+      toggle();
+      return;
+    } else {
+      action(newField);
+      toggle();
+      resetForm();
+      console.log(newField);
+    }
+  };
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (edit) {
+      setName(editField.name);
+      setType(editField.type);
+      setLabel(editField.label);
+      setPlaceholder(editField.placeholder);
+      setValue(editField.value);
+      setRequired(editField.required);
+      if (editField.options) {
+        setOptions(editField.options);
+      }
+    }
+  }, [edit]);
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "overflow-auto fixed inset-0 flex items-center justify-center z-40",
+    id: "modal"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "bg-white w-[450px] p-6 rounded-lg z-50"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "text-[28px] text-center leading-none"
+  }, edit ? "Update Field" : "Add New Field"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
+    onSubmit: formHandler,
+    className: "flex flex-col gap-2"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "items-center grid grid-cols-3"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    htmlFor: "name"
+  }, "Type:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+    className: "col-span-2 border border-gray-300 rounded-md p-2 w-full h-10",
+    name: "type",
+    id: "type",
+    defaultValue: type,
+    onChange: e => setType(e.target.value),
+    required: true
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: ""
+  }, "Select Field Type"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    selected: type === "text",
+    value: "text"
+  }, "Text"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    selected: type === "number",
+    value: "number"
+  }, "Number"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    selected: type === "email",
+    value: "email"
+  }, "Email"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    selected: type === "tel",
+    value: "tel"
+  }, "Telephone"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    selected: type === "textarea",
+    value: "textarea"
+  }, "Textarea"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    selected: type === "select",
+    value: "select"
+  }, "Select"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    selected: type === "checkbox",
+    value: "checkbox"
+  }, "Checkbox"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    selected: type === "radio",
+    value: "radio"
+  }, "Radio"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "items-center grid grid-cols-3"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    htmlFor: "name"
+  }, "ID:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    name: "name",
+    id: "name",
+    value: name,
+    onChange: e => setName(e.target.value),
+    placeholder: "name",
+    className: "col-span-2 border border-gray-300 rounded-md p-2 w-full",
+    required: true
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "items-center grid grid-cols-3"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    htmlFor: "label"
+  }, "Label:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    name: "label",
+    id: "label",
+    value: label,
+    onChange: e => setLabel(e.target.value),
+    placeholder: "Field Label",
+    className: "col-span-2 border border-gray-300 rounded-md p-2 w-full",
+    required: true
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "items-center grid grid-cols-3"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    htmlFor: "placeholder"
+  }, "Placeholder:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    name: "placeholder",
+    id: "placeholder",
+    value: placeholder,
+    onChange: e => setPlaceholder(e.target.value),
+    placeholder: "Field Placeholder Text",
+    className: "col-span-2 border border-gray-300 rounded-md p-2 w-full"
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "items-center grid grid-cols-3"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    htmlFor: "value"
+  }, "Default Value:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    name: "value",
+    id: "value",
+    value: value,
+    onChange: e => setValue(e.target.value),
+    placeholder: "Field Default Value",
+    className: "col-span-2 border border-gray-300 rounded-md p-2 w-full"
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "grid grid-cols-3 items-center"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    htmlFor: "required"
+  }, "Required:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "checkbox",
+    name: "required",
+    checked: required,
+    onChange: () => setRequired(!required),
+    id: "required",
+    className: "col-span-2"
+  })), type === "select" || type === "radio" || type === "checkbox" || type === "checkbox" ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex flex-col gap-2"
+  }, options.map((option, index) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "grid grid-cols-5 gap-1 w-full items-center"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "col-span-2"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    className: "text-sm",
+    htmlFor: `options_label_${index}`
+  }, "Label"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    name: `options_label_${index}`,
+    id: `options_label_${index}`,
+    value: option.label,
+    onChange: e => changeOptionLabel(e, index),
+    placeholder: "Option Label",
+    className: "border border-gray-300 rounded-md p-2 w-full"
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "col-span-2"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    className: "text-sm",
+    htmlFor: `options_value_${index}`
+  }, "Value"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    name: `options_value_${index}`,
+    id: `options_value_${index}`,
+    onChange: e => changeOptionValue(e, index),
+    value: option.value,
+    placeholder: "Option Value",
+    className: "border border-gray-300 rounded-md p-2 w-full"
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "text-sm"
+  }, "Remove"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    onClick: () => removeOption(index),
+    className: "bg-red-500 text-white py-1 px-2 font-bold w-full rounded hover:bg-red-600"
+  }, "-")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    onClick: addOption,
+    className: "px-6 py-2 border border-dashed border-black w-full"
+  }, "+ Add Option")) : null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex gap-5 justify-center items-center"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "submit",
+    className: "mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600"
+  }, edit ? "Update" : "Add Field"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    onClick: () => {
+      toggle();
+      resetForm();
+    },
+    className: "mt-4 bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700"
+  }, "CLose")))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "overlay fixed inset-0"
+  }));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Modal);
+
+/***/ }),
+
+/***/ "./src/components/Modal.css":
+/*!**********************************!*\
+  !*** ./src/components/Modal.css ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
 /***/ "./src/index.scss":
 /*!************************!*\
   !*** ./src/index.scss ***!
@@ -126,6 +418,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _components_Modal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/Modal */ "./src/components/Modal.jsx");
+
 
 
 
@@ -144,6 +438,24 @@ wp.blocks.registerBlockType("greatkhanjoy/survey", {
         multiple: false,
         answers: ["answer1", "answer2", "answer3"]
       }]
+    },
+    fields: {
+      type: "array",
+      default: [{
+        name: "name",
+        label: "Name",
+        type: "text",
+        required: true,
+        value: "",
+        placeholder: "Enter your name"
+      }, {
+        name: "email",
+        label: "Email",
+        type: "email",
+        required: true,
+        value: "",
+        placeholder: "Enter your email"
+      }]
     }
   },
   example: {},
@@ -152,6 +464,69 @@ wp.blocks.registerBlockType("greatkhanjoy/survey", {
     return null;
   }
 });
+(function () {
+  let locked = false;
+  wp.data.subscribe(function () {
+    const blocks = wp.data.select("core/block-editor").getBlocks();
+    const questionType = blocks.filter(block => {
+      if (block.name === "greatkhanjoy/survey" && block.attributes.questions) {
+        return block.attributes.questions.some(question => !question.type || question.type === "");
+      }
+      return false;
+    });
+    if (questionType.length && !locked) {
+      locked = true;
+      wp.data.dispatch("core/editor").lockPostSaving("questionTypeBlank");
+    }
+    if (!questionType.length && locked) {
+      locked = false;
+      wp.data.dispatch("core/editor").unlockPostSaving("questionTypeBlank");
+    }
+  });
+})();
+(function () {
+  let locked = false;
+  wp.data.subscribe(function () {
+    const blocks = wp.data.select("core/block-editor").getBlocks();
+    const questionTitle = blocks.filter(block => {
+      if (block.name === "greatkhanjoy/survey" && block.attributes.questions) {
+        return block.attributes.questions.some(question => !question.question || question.question === "");
+      }
+      return false;
+    });
+    if (questionTitle.length && !locked) {
+      locked = true;
+      wp.data.dispatch("core/editor").lockPostSaving("questionTitleBlank");
+    }
+    if (!questionTitle.length && locked) {
+      locked = false;
+      wp.data.dispatch("core/editor").unlockPostSaving("questionTitleBlank");
+    }
+  });
+})();
+(function () {
+  let locked = false;
+  wp.data.subscribe(function () {
+    const blocks = wp.data.select("core/block-editor").getBlocks();
+    const questionAnswerNotEmpty = blocks.filter(block => {
+      if (block.name === "greatkhanjoy/survey" && block.attributes.questions) {
+        const question = block.attributes.questions.filter(question => {
+          return question.answers.some(answer => answer === "" || answer === undefined);
+        });
+        return question.length;
+      }
+      return false;
+    });
+    if (questionAnswerNotEmpty.length && !locked) {
+      locked = true;
+      wp.data.dispatch("core/editor").lockPostSaving("optionsBlank");
+    }
+    if (!questionAnswerNotEmpty.length && locked) {
+      locked = false;
+      wp.data.dispatch("core/editor").unlockPostSaving("optionsBlank");
+    }
+  });
+})();
 function EditComponent(props) {
   const [questioType, setQuestionType] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)("");
   const addQuestion = e => {
@@ -166,6 +541,39 @@ function EditComponent(props) {
     // Update the state by appending the new question
     props.setAttributes({
       questions: [...props.attributes.questions, newQuestion]
+    });
+  };
+  const addField = fields => {
+    const newField = {
+      name: fields.name,
+      label: fields.label,
+      type: fields.type,
+      placeholder: fields.placeholder,
+      value: fields.value,
+      required: fields.required
+    };
+    if (fields.type === "select" || fields.type === "radio" || fields.type === "checkbox") {
+      newField.options = fields.options;
+    }
+    props.setAttributes({
+      fields: [...props.attributes.fields, newField]
+    });
+  };
+  const updateField = field => {
+    setEdit(false);
+    setEditField(null);
+    setEditIndex(null);
+    const fields = [...props.attributes.fields];
+    fields[editIndex] = field;
+    props.setAttributes({
+      fields: fields
+    });
+  };
+  const removeField = index => {
+    const fields = [...props.attributes.fields];
+    fields.splice(index, 1);
+    props.setAttributes({
+      fields: fields
     });
   };
   const updateQuestion = (e, index) => {
@@ -217,9 +625,97 @@ function EditComponent(props) {
       questions: questions
     });
   };
+
+  //modal handler
+  const [edit, setEdit] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
+  const [showModal, setShowModal] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
+  const openModal = () => {
+    setEdit(false);
+    setShowModal(prev => !prev);
+  };
+  const [editIndex, setEditIndex] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(null);
+  const [editField, setEditField] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(null);
+  const openEditModal = (field, index) => {
+    setEdit(true);
+    setEditIndex(index);
+    setEditField(field);
+    setShowModal(prev => !prev);
+  };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "question_blocks flex flex-col gap-4"
-  }, props.attributes.questions.map((question, index) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "bg-gray-200 p-4 mb-4 rounded-md flex flex-col space-y-6"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", {
+    className: "text-[24px] font-semibold leading-normal text-center"
+  }, "Contact Fields"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "grid grid-cols-1 gap-3"
+  }, props.attributes.fields.map((field, index) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "grid grid-cols-3 gap-4 items-center w-full"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    className: "col-span-2 grid grid-cols-4 items-center gap-2"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "text-lg "
+  }, field.label), field.type === "text" || field.type === "email" || field.type === "number" || field.type === "tel" ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: field.type,
+    name: field.name,
+    value: field.value,
+    placeholder: field.placeholder,
+    required: field.required,
+    className: "col-span-3 w-full"
+  }) : null, field.type === "textarea" && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("textarea", {
+    name: field.name,
+    defaultValue: field.value,
+    required: field.required,
+    className: "col-span-3 w-full"
+  }), field.type === "select" && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+    name: field.name,
+    required: field.required,
+    className: "col-span-3 h-[40px] text-[18px] p-2 w-full"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: ""
+  }, "Select an option"), field.options.map(option => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: option.value
+  }, option.label))), field.type === "radio" && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "col-span-3 flex gap-2 w-full"
+  }, field.options.map(option => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    className: "flex items-center gap-2"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "radio",
+    name: field.name,
+    checked: option.value === field.value,
+    required: field.required
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, option.label)))), field.type === "checkbox" && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "col-span-3 flex gap-2 w-full"
+  }, field.options.map(option => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    className: "flex items-center gap-2"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "checkbox",
+    name: field.name,
+    checked: option.value === field.value,
+    required: field.required
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, option.label))))), field.name !== "email" && field.name !== "name" && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex justify-around gap-1 items-center"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    onClick: () => openEditModal(field, index),
+    className: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2"
+  }, "Edit"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    onClick: () => removeField(index),
+    className: "bg-red-500 hover:bg-red-600 text-white px-4 py-2"
+  }, "Delete"))))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "w-full"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    onClick: openModal,
+    className: "border border-black border-dashed w-full py-2 px-6"
+  }, "Add New Field")), showModal && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Modal__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    toggle: openModal,
+    action: addField,
+    editAction: updateField,
+    editField: editField,
+    edit: edit
+  })), props.attributes.questions.map((question, index) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     key: index,
     className: "bg-gray-200 p-4"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
@@ -246,7 +742,9 @@ function EditComponent(props) {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     onChange: e => changeQuestionType(e, index),
     className: "h-[45px] text-[18px] p-2"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, "Change Question type"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: ""
+  }, "Change Question type"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
     selected: question.type == "radio",
     value: "radio"
   }, "Radio"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
@@ -285,7 +783,9 @@ function EditComponent(props) {
     required: true,
     onChange: e => setQuestionType(e.target.value),
     className: "h-[45px] text-[18px] p-2"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, "Select Question type"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: ""
+  }, "Select Question type"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
     value: "radio"
   }, "Radio"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
     value: "checkbox"

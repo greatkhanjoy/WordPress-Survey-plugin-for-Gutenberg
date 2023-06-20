@@ -1,11 +1,11 @@
 <?php
 
 /*
-Plugin Name: Great Khan Joy Servey
+Plugin Name: Simple Survey for Gutenberg
 Plugin URI: https://greatkhanjoy.me/
-Description: This is a simple plugin for servey.
+Description: Multistep or wizard type survey for WordPress gutenberg.
 Version: 1.0
-Author: Great Khan Joy
+Author: Imran Hosein khan Joy (Greatkhanjoy)
 Author URI: https://greatkhanjoy.me/
 License: GPLv2 or later
 Text Domain: greatkhanjoy-servey

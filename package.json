@@ -12,7 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@wordpress/scripts": "^26.4.0"
+    "@wordpress/scripts": "^26.4.0",
+    "react-toastify": "^9.1.3"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",

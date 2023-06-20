@@ -1,6 +1,7 @@
 import "./index.scss";
 import { useState } from "react";
 import { Icon } from "@wordpress/components";
+import Modal from "./components/Modal";
 
 wp.blocks.registerBlockType("greatkhanjoy/survey", {
   title: "Survey",
@@ -19,6 +20,27 @@ wp.blocks.registerBlockType("greatkhanjoy/survey", {
         },
       ],
     },
+    fields: {
+      type: "array",
+      default: [
+        {
+          name: "name",
+          label: "Name",
+          type: "text",
+          required: true,
+          value: "",
+          placeholder: "Enter your name",
+        },
+        {
+          name: "email",
+          label: "Email",
+          type: "email",
+          required: true,
+          value: "",
+          placeholder: "Enter your email",
+        },
+      ],
+    },
   },
   example: {},
   edit: EditComponent,
@@ -26,6 +48,87 @@ wp.blocks.registerBlockType("greatkhanjoy/survey", {
     return null;
   },
 });
+
+(function () {
+  let locked = false;
+
+  wp.data.subscribe(function () {
+    const blocks = wp.data.select("core/block-editor").getBlocks();
+    const questionType = blocks.filter((block) => {
+      if (block.name === "greatkhanjoy/survey" && block.attributes.questions) {
+        return block.attributes.questions.some(
+          (question) => !question.type || question.type === ""
+        );
+      }
+      return false;
+    });
+
+    if (questionType.length && !locked) {
+      locked = true;
+      wp.data.dispatch("core/editor").lockPostSaving("questionTypeBlank");
+    }
+
+    if (!questionType.length && locked) {
+      locked = false;
+      wp.data.dispatch("core/editor").unlockPostSaving("questionTypeBlank");
+    }
+  });
+})();
+
+(function () {
+  let locked = false;
+
+  wp.data.subscribe(function () {
+    const blocks = wp.data.select("core/block-editor").getBlocks();
+    const questionTitle = blocks.filter((block) => {
+      if (block.name === "greatkhanjoy/survey" && block.attributes.questions) {
+        return block.attributes.questions.some(
+          (question) => !question.question || question.question === ""
+        );
+      }
+      return false;
+    });
+
+    if (questionTitle.length && !locked) {
+      locked = true;
+      wp.data.dispatch("core/editor").lockPostSaving("questionTitleBlank");
+    }
+
+    if (!questionTitle.length && locked) {
+      locked = false;
+      wp.data.dispatch("core/editor").unlockPostSaving("questionTitleBlank");
+    }
+  });
+})();
+
+(function () {
+  let locked = false;
+
+  wp.data.subscribe(function () {
+    const blocks = wp.data.select("core/block-editor").getBlocks();
+    const questionAnswerNotEmpty = blocks.filter((block) => {
+      if (block.name === "greatkhanjoy/survey" && block.attributes.questions) {
+        const question = block.attributes.questions.filter((question) => {
+          return question.answers.some(
+            (answer) => answer === "" || answer === undefined
+          );
+        });
+        return question.length;
+      }
+      return false;
+    });
+
+    if (questionAnswerNotEmpty.length && !locked) {
+      locked = true;
+      wp.data.dispatch("core/editor").lockPostSaving("optionsBlank");
+    }
+
+    if (!questionAnswerNotEmpty.length && locked) {
+      locked = false;
+      wp.data.dispatch("core/editor").unlockPostSaving("optionsBlank");
+    }
+  });
+})();
 
 function EditComponent(props) {
   const [questioType, setQuestionType] = useState("");
@@ -42,6 +145,44 @@ function EditComponent(props) {
     props.setAttributes({
       questions: [...props.attributes.questions, newQuestion],
     });
+  };
+
+  const addField = (fields) => {
+    const newField = {
+      name: fields.name,
+      label: fields.label,
+      type: fields.type,
+      placeholder: fields.placeholder,
+      value: fields.value,
+      required: fields.required,
+    };
+
+    if (
+      fields.type === "select" ||
+      fields.type === "radio" ||
+      fields.type === "checkbox"
+    ) {
+      newField.options = fields.options;
+    }
+
+    props.setAttributes({
+      fields: [...props.attributes.fields, newField],
+    });
+  };
+
+  const updateField = (field) => {
+    setEdit(false);
+    setEditField(null);
+    setEditIndex(null);
+    const fields = [...props.attributes.fields];
+    fields[editIndex] = field;
+    props.setAttributes({ fields: fields });
+  };
+
+  const removeField = (index) => {
+    const fields = [...props.attributes.fields];
+    fields.splice(index, 1);
+    props.setAttributes({ fields: fields });
   };
 
   const updateQuestion = (e, index) => {
@@ -86,9 +227,151 @@ function EditComponent(props) {
     props.setAttributes({ questions: questions });
   };
 
+  //modal handler
+  const [edit, setEdit] = useState(false);
+
+  const [showModal, setShowModal] = useState(false);
+  const openModal = () => {
+    setEdit(false);
+    setShowModal((prev) => !prev);
+  };
+
+  const [editIndex, setEditIndex] = useState(null);
+  const [editField, setEditField] = useState(null);
+  const openEditModal = (field, index) => {
+    setEdit(true);
+    setEditIndex(index);
+    setEditField(field);
+    setShowModal((prev) => !prev);
+  };
+
   return (
     <>
       <div className="question_blocks flex flex-col gap-4">
+        <div className="bg-gray-200 p-4 mb-4 rounded-md flex flex-col space-y-6">
+          <h4 className="text-[24px] font-semibold leading-normal text-center">
+            Contact Fields
+          </h4>
+          <div className="grid grid-cols-1 gap-3">
+            {props.attributes.fields.map((field, index) => (
+              <div className="grid grid-cols-3 gap-4 items-center w-full">
+                <label className="col-span-2 grid grid-cols-4 items-center gap-2">
+                  <span className="text-lg ">{field.label}</span>
+                  {field.type === "text" ||
+                  field.type === "email" ||
+                  field.type === "number" ||
+                  field.type === "tel" ? (
+                    <input
+                      type={field.type}
+                      name={field.name}
+                      value={field.value}
+                      placeholder={field.placeholder}
+                      required={field.required}
+                      className="col-span-3 w-full"
+                    />
+                  ) : null}
+                  {/* Textarea  */}
+                  {field.type === "textarea" && (
+                    <textarea
+                      name={field.name}
+                      defaultValue={field.value}
+                      required={field.required}
+                      className="col-span-3 w-full"
+                    />
+                  )}
+
+                  {/* Select */}
+                  {field.type === "select" && (
+                    <select
+                      name={field.name}
+                      required={field.required}
+                      className="col-span-3 h-[40px] text-[18px] p-2 w-full"
+                    >
+                      <option value="">Select an option</option>
+                      {field.options.map((option) => (
+                        <option value={option.value}>{option.label}</option>
+                      ))}
+                    </select>
+                  )}
+
+                  {/* Radio */}
+                  {field.type === "radio" && (
+                    <div className="col-span-3 flex gap-2 w-full">
+                      {field.options.map((option) => (
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="radio"
+                            name={field.name}
+                            checked={option.value === field.value}
+                            required={field.required}
+                          />
+                          <span>{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Checkbox */}
+                  {field.type === "checkbox" && (
+                    <div className="col-span-3 flex gap-2 w-full">
+                      {field.options.map((option) => (
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            name={field.name}
+                            checked={option.value === field.value}
+                            required={field.required}
+                          />
+                          <span>{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                </label>
+                {field.name !== "email" && field.name !== "name" && (
+                  <div className="flex justify-around gap-1 items-center">
+                    <button
+                      type="button"
+                      onClick={() => openEditModal(field, index)}
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeField(index)}
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="w-full">
+            <button
+              type="button"
+              onClick={openModal}
+              className="border border-black border-dashed w-full py-2 px-6"
+            >
+              Add New Field
+            </button>
+          </div>
+
+          {/* Modal  */}
+          {showModal && (
+            <Modal
+              toggle={openModal}
+              action={addField}
+              editAction={updateField}
+              editField={editField}
+              edit={edit}
+            />
+          )}
+
+          {/* End Modal  */}
+        </div>
         {props.attributes.questions.map((question, index) => (
           <div key={index} className="bg-gray-200 p-4">
             <input
@@ -120,7 +403,7 @@ function EditComponent(props) {
                   onChange={(e) => changeQuestionType(e, index)}
                   className="h-[45px] text-[18px] p-2"
                 >
-                  <option>Change Question type</option>
+                  <option value="">Change Question type</option>
                   <option selected={question.type == "radio"} value="radio">
                     Radio
                   </option>
@@ -173,7 +456,7 @@ function EditComponent(props) {
               onChange={(e) => setQuestionType(e.target.value)}
               className="h-[45px] text-[18px] p-2"
             >
-              <option>Select Question type</option>
+              <option value="">Select Question type</option>
               <option value="radio">Radio</option>
               <option value="checkbox">Checkbox</option>
               <option value="image">Image</option>
