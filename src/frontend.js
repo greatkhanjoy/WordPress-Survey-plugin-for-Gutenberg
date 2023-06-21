@@ -21,14 +21,20 @@ const Survey = ({ data }) => {
   );
 
   const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
-    country: "",
-    increment: "",
-    email: "",
-    age: "",
+    nonce: data.nonce,
+    survey_id: data.survey_id,
+    survey_name: data.survey_name,
+    sender_email: data.sender_email,
+    email_subject: data.email_subject,
+    email_body: data.email_body,
+    fields: data.fields,
     questions: data.questions,
   });
+
+  const [disableNav, setDisableNav] = useState(false);
+  const disableNavHandler = () => {
+    setDisableNav(true);
+  };
 
   const updateAnswer = (e, index) => {
     const newQuestions = [...formData.questions];
@@ -37,20 +43,27 @@ const Survey = ({ data }) => {
       ...formData,
       questions: newQuestions,
     });
-
-    console.log(formData);
   };
 
   const updatePersonalInfo = (e) => {
+    const newFields = [...formData.fields];
+    newFields.map((field) => {
+      if (field.type === "checkbox" && field.name === e.target.name) {
+        field.value.includes(e.target.value)
+          ? field.value.splice(field.value.indexOf(e.target.value), 1)
+          : field.value.push(e.target.value);
+      } else if (field.name === e.target.name) {
+        field.value = e.target.value;
+      }
+    });
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      fields: newFields,
     });
   };
   const formHandler = (e) => {
     e.preventDefault();
     setSteps(steps + 1);
-    console.log(formData);
   };
 
   useEffect(() => {
@@ -62,7 +75,7 @@ const Survey = ({ data }) => {
       <form onSubmit={formHandler}>
         <div className="bg-gray-200 mx-auto p-5 w-full">
           <h2 className="text-center text-xl leading-normal font-medium">
-            SATISFACTION SURVEY
+            {formData.survey_name}
           </h2>
 
           <div class="w-full bg-white rounded-full dark:bg-gray-700">
@@ -90,13 +103,15 @@ const Survey = ({ data }) => {
             );
           })}
 
-          {steps === totalSteps && <Success />}
+          {steps === totalSteps && (
+            <Success data={formData} action={disableNavHandler} />
+          )}
         </div>
         <div className="flex justify-center gap-2 p-5 bg-gray-200">
           <button
             onClick={steps <= 1 ? null : () => setSteps(steps - 1)}
             type="button"
-            disabled={steps <= 1}
+            disabled={steps <= 1 || disableNav}
             className={`bg-gray-300  px-6 py-2 ${
               steps <= 1 && "cursor-not-allowed opacity-50 :hover:bg-gray-300"
             }`}

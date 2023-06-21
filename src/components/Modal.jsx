@@ -65,6 +65,10 @@ const Modal = ({ toggle, action, editAction, editField, edit }) => {
       placeholder,
     };
 
+    if (type === "checkbox" && value === "") {
+      newField.value = [];
+    }
+
     if (type === "select" || type === "radio" || type === "checkbox") {
       newField.options = options;
     }
@@ -108,7 +112,7 @@ const Modal = ({ toggle, action, editAction, editField, edit }) => {
           <div className="items-center grid grid-cols-3">
             <label htmlFor="name">Type:</label>
             <select
-              className="col-span-2 border border-gray-300 rounded-md p-2 w-full h-10"
+              className="col-span-2 border border-gray-300 rounded-md p-2 w-full"
               name="type"
               id="type"
               defaultValue={type}
@@ -187,7 +191,11 @@ const Modal = ({ toggle, action, editAction, editField, edit }) => {
               name="value"
               id="value"
               value={value}
-              onChange={(e) => setValue(e.target.value)}
+              onChange={(e) =>
+                setValue(
+                  type === "checkbox" ? [e.target.value] : e.target.value
+                )
+              }
               placeholder="Field Default Value"
               className="col-span-2 border border-gray-300 rounded-md p-2 w-full"
             />

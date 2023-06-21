@@ -26,83 +26,62 @@ const ContactForm = _ref => {
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex flex-col gap-3 p-4"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex flex-col sm:flex-row gap-4 items-center justify-items-center"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    name: "first_name",
-    placeholder: "First Name",
-    value: data.first_name,
+    className: "grid grid-cols-1 sm:grid-cols-2 gap-4"
+  }, data.fields.map((field, index) => field.type === "text" || field.type === "email" || field.type === "number" || field.type === "tel" ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: field.type,
+    name: field.name,
+    placeholder: field.label,
+    value: field.value,
     onChange: onChange,
     className: "w-full p-3",
-    required: true
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+    required: field.required
+  }) : field.type === "select" ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     className: "w-full h-[50px] px-2",
-    name: "country",
-    onChange: onChange
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", null, "Select your country"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-    selected: data.country === "india",
-    value: "india"
-  }, "India"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-    selected: data.country === "usa",
-    value: "usa"
-  }, "USA"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-    selected: data.country === "uk",
-    value: "uk"
-  }, "UK"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex flex-col sm:flex-row justify-center gap-4 items-center"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    name: "last_name",
-    placeholder: "Last Name",
-    value: data.last_name,
+    name: field.name,
     onChange: onChange,
-    className: "w-full p-3"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "number",
-    name: "increment",
-    value: data.increment,
-    onChange: onChange,
-    placeholder: "0",
-    className: "w-full p-3"
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex w-full flex-col sm:flex-row justify-center gap-4 items-center"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "w-full sm:w-1/2"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "email",
-    name: "email",
-    value: data.email,
-    onChange: onChange,
-    placeholder: "Your Email",
-    className: "w-full p-3"
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "w-full sm:w-1/2 flex flex-col sm:flex-row gap-4"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "number",
-    name: "age",
-    placeholder: "Age",
-    value: data.increment,
-    onChange: onChange,
-    className: "p-3 w-full sm:w-1/3"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex gap-4"
+    required: field.required
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: ""
+  }, field.label), field.options.map((option, index) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    selected: field.value === option.value,
+    value: option.value
+  }, " ", option.label, " "))) : field.type === "radio" ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex gap-4 items-center"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    className: "text-sm"
+  }, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex gap-4"
+  }, field.options.map((option, index) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
     className: "flex gap-2 items-center cursor-pointer"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: "radio",
-    name: "gender",
-    value: "male",
-    checked: data.gender === "male",
-    onChange: onChange
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, "Male")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
-    className: "flex gap-2 items-center cursor-pointer"
+    name: field.name,
+    value: option.value,
+    checked: field.value === option.value,
+    onChange: onChange,
+    required: field.required
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, option.label))))) : field.type === "checkbox" ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex gap-4 items-center"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    className: "text-sm"
+  }, field.label), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex gap-4 flex-wrap"
+  }, field.options.map((option, index) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    className: "text-sm flex gap-2 items-center cursor-pointer"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "radio",
-    name: "gender",
-    value: "female",
-    checked: data.gender === "female",
-    onChange: onChange
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, "Female"))))));
+    type: "checkbox",
+    name: field.name,
+    value: option.value,
+    checked: field.value.includes(option.value),
+    onChange: onChange,
+    required: field.required && field.value.length === 0
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, option.label))))) : field.type === "textarea" ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("textarea", {
+    name: field.name,
+    defaultValue: field.value,
+    rows: 3,
+    onChange: onChange,
+    placeholder: field.placeholder
+  }) : null)));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ContactForm);
 
@@ -198,16 +177,57 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 
 
-const Success = () => {
+const Success = _ref => {
+  let {
+    data,
+    action
+  } = _ref;
+  const [formSubmitted, setFormSubmitted] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const submitHandler = () => {
+    setLoading(true);
+    const formData = {
+      survey_id: data.survey_id,
+      survey_name: data.survey_name,
+      sender_email: data.sender_email,
+      email_subject: data.email_subject,
+      email_body: data.email_body,
+      fields: data.fields,
+      questions: data.questions,
+      receiver_email: data.fields.find(field => field.name === "email").value
+    };
+    fetch("/wp-json/greatkhanjoy/v1/survey", {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: {
+        "Content-Type": "application/json",
+        "X-WP-Nonce": data.nonce
+      }
+    }).then(response => response.json()).then(data => {
+      setLoading(false);
+      setFormSubmitted(true);
+      action();
+    }).catch(error => {
+      console.error("Error:", error);
+    });
+  };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex flex-col gap-3 p-4 min-h-[400px] justify-center mx-auto"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, formSubmitted ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex flex-col gap-4 items-center justify-center"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
     className: "text-3xl leading-normal font-normal"
-  }, "Survey complete! Thank you for you time."), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+  }, "Survey complete!"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "text-lg"
+  }, "Thank you for your time. ")) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex flex-col gap-4 items-center justify-center"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
+    className: "text-3xl leading-normal font-normal"
+  }, "Almost there! Review your data and submit."), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    onClick: submitHandler,
     className: "inline px-6 py-2 text-lg border border-green-600 text-green-600 bg-transparent"
-  }, "SUBMIT SURVEY")));
+  }, loading ? "Submitting..." : "Submit")));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Success);
 
@@ -352,14 +372,19 @@ const Survey = _ref => {
   const [progress, setProgress] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
   const [totalSteps, setTotalSteps] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(Number(data.questions.length) + 2);
   const [formData, setFormData] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)({
-    first_name: "",
-    last_name: "",
-    country: "",
-    increment: "",
-    email: "",
-    age: "",
+    nonce: data.nonce,
+    survey_id: data.survey_id,
+    survey_name: data.survey_name,
+    sender_email: data.sender_email,
+    email_subject: data.email_subject,
+    email_body: data.email_body,
+    fields: data.fields,
     questions: data.questions
   });
+  const [disableNav, setDisableNav] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const disableNavHandler = () => {
+    setDisableNav(true);
+  };
   const updateAnswer = (e, index) => {
     const newQuestions = [...formData.questions];
     newQuestions[index].answer = e;
@@ -367,18 +392,24 @@ const Survey = _ref => {
       ...formData,
       questions: newQuestions
     });
-    console.log(formData);
   };
   const updatePersonalInfo = e => {
+    const newFields = [...formData.fields];
+    newFields.map(field => {
+      if (field.type === "checkbox" && field.name === e.target.name) {
+        field.value.includes(e.target.value) ? field.value.splice(field.value.indexOf(e.target.value), 1) : field.value.push(e.target.value);
+      } else if (field.name === e.target.name) {
+        field.value = e.target.value;
+      }
+    });
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      fields: newFields
     });
   };
   const formHandler = e => {
     e.preventDefault();
     setSteps(steps + 1);
-    console.log(formData);
   };
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     setProgress(Math.round(steps / totalSteps * 100));
@@ -391,7 +422,7 @@ const Survey = _ref => {
     className: "bg-gray-200 mx-auto p-5 w-full"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "text-center text-xl leading-normal font-medium"
-  }, "SATISFACTION SURVEY"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, formData.survey_name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     class: "w-full bg-white rounded-full dark:bg-gray-700"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     class: "bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full flex justify-center",
@@ -408,12 +439,15 @@ const Survey = _ref => {
       data: question,
       onChange: e => updateAnswer(e, index)
     });
-  }), steps === totalSteps && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_frontend_Success__WEBPACK_IMPORTED_MODULE_5__["default"], null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }), steps === totalSteps && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_frontend_Success__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    data: formData,
+    action: disableNavHandler
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex justify-center gap-2 p-5 bg-gray-200"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     onClick: steps <= 1 ? null : () => setSteps(steps - 1),
     type: "button",
-    disabled: steps <= 1,
+    disabled: steps <= 1 || disableNav,
     className: `bg-gray-300  px-6 py-2 ${steps <= 1 && "cursor-not-allowed opacity-50 :hover:bg-gray-300"}`
   }, "BACKWARD"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
     disabled: steps == totalSteps,

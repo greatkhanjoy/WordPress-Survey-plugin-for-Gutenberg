@@ -1,5 +1,6 @@
 import "./index.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { select } from "@wordpress/data";
 import { Icon } from "@wordpress/components";
 import Modal from "./components/Modal";
 
@@ -9,6 +10,26 @@ wp.blocks.registerBlockType("greatkhanjoy/survey", {
   description: "A simple survey block",
   category: "common",
   attributes: {
+    survey_id: {
+      type: "number",
+      default: 0, //post id
+    },
+    survey_name: {
+      type: "string",
+      default: "",
+    },
+    sender_email: {
+      type: "string",
+      default: "",
+    },
+    email_subject: {
+      type: "string",
+      default: "",
+    },
+    email_body: {
+      type: "string",
+      default: "",
+    },
     questions: {
       type: "array",
       default: [
@@ -51,7 +72,32 @@ wp.blocks.registerBlockType("greatkhanjoy/survey", {
 
 (function () {
   let locked = false;
+  wp.data.subscribe(function () {
+    const blocks = wp.data.select("core/block-editor").getBlocks();
+    const surveyBlocks = blocks.filter((block) => {
+      return (
+        block.name === "greatkhanjoy/survey" &&
+        (block.attributes.survey_name === "" ||
+          block.attributes.sender_email === "" ||
+          block.attributes.email_subject === "" ||
+          block.attributes.email_body === "")
+      );
+    });
 
+    if (surveyBlocks.length > 0 && !locked) {
+      locked = true;
+      wp.data.dispatch("core/editor").lockPostSaving("settingEmpty");
+    }
+
+    if (!surveyBlocks.length > 0 && locked) {
+      locked = false;
+      wp.data.dispatch("core/editor").unlockPostSaving("settingEmpty");
+    }
+  });
+})();
+
+(function () {
+  let locked = false;
   wp.data.subscribe(function () {
     const blocks = wp.data.select("core/block-editor").getBlocks();
     const questionType = blocks.filter((block) => {
@@ -131,6 +177,8 @@ wp.blocks.registerBlockType("greatkhanjoy/survey", {
 })();
 
 function EditComponent(props) {
+  var postId = wp.data.select("core/editor").getCurrentPostId();
+  props.setAttributes({ survey_id: postId });
   const [questioType, setQuestionType] = useState("");
   const addQuestion = (e) => {
     e.preventDefault();
@@ -244,17 +292,115 @@ function EditComponent(props) {
     setEditField(field);
     setShowModal((prev) => !prev);
   };
+  const getCurrentUserEmail = () => {
+    fetch(`${window.greatkhanjoy_survey.api_url}wp/v2/users/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-WP-Nonce": window.greatkhanjoy_survey.nonce,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const userEmail = data.email;
+        if (props.attributes.sender_email === "") {
+          props.setAttributes({ sender_email: userEmail });
+        }
+      })
+      .catch((error) => {
+        console.error("Error retrieving current user email:", error);
+      });
+  };
+
+  useEffect(() => {
+    getCurrentUserEmail();
+  }, []);
 
   return (
     <>
       <div className="question_blocks flex flex-col gap-4">
+        {/* Survey Settings  */}
+        <div className="bg-gray-200 p-4 mb-4 rounded-md flex flex-col space-y-6">
+          <h4 className="text-[24px] font-semibold leading-normal text-center">
+            Survey Settings
+          </h4>
+          <div className="grid grid-cols-1 gap-3">
+            <div className="w-full">
+              <label className="grid grid-cols-4 items-center gap-2">
+                <span className="text-lg">Survey Name</span>
+                <input
+                  type="text"
+                  name="survey_name"
+                  value={props.attributes.survey_name}
+                  onChange={(e) =>
+                    props.setAttributes({ survey_name: e.target.value })
+                  }
+                  placeholder="Enter your survey name"
+                  required
+                  className="col-span-3 w-full"
+                />
+              </label>
+            </div>
+            <div className="w-full">
+              <label className="grid grid-cols-4 items-center gap-2">
+                <span className="text-lg ">Sender Email</span>
+                <input
+                  type="email"
+                  name="sender_email"
+                  value={props.attributes.sender_email}
+                  onChange={(e) =>
+                    props.setAttributes({ sender_email: e.target.value })
+                  }
+                  placeholder="Enter your email"
+                  required
+                  className="col-span-3 w-full"
+                />
+              </label>
+            </div>
+            <div className="w-full">
+              <label className="grid grid-cols-4 items-center gap-2">
+                <span className="text-lg ">Email Subject</span>
+                <input
+                  type="text"
+                  name="email_subject"
+                  value={props.attributes.email_subject}
+                  onChange={(e) =>
+                    props.setAttributes({ email_subject: e.target.value })
+                  }
+                  placeholder="Enter your email subject"
+                  required
+                  className="col-span-3 w-full"
+                />
+              </label>
+            </div>
+            <div className="w-full">
+              <label className="grid grid-cols-4 items-center gap-2">
+                <span className="text-lg ">Email Body</span>
+                <textarea
+                  className="col-span-3 w-full"
+                  rows="5"
+                  name="email_body"
+                  defaultValue={props.attributes.email_body}
+                  placeholder="Enter your email body"
+                  onChange={(e) =>
+                    props.setAttributes({ email_body: e.target.value })
+                  }
+                  required
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+        {/* End Survey Settings  */}
+
+        {/* Survey Fields  */}
         <div className="bg-gray-200 p-4 mb-4 rounded-md flex flex-col space-y-6">
           <h4 className="text-[24px] font-semibold leading-normal text-center">
             Contact Fields
           </h4>
           <div className="grid grid-cols-1 gap-3">
             {props.attributes.fields.map((field, index) => (
-              <div className="grid grid-cols-3 gap-4 items-center w-full">
+              <div className="grid grid-cols-3 w-full">
                 <label className="col-span-2 grid grid-cols-4 items-center gap-2">
                   <span className="text-lg ">{field.label}</span>
                   {field.type === "text" ||
@@ -285,11 +431,16 @@ function EditComponent(props) {
                     <select
                       name={field.name}
                       required={field.required}
-                      className="col-span-3 h-[40px] text-[18px] p-2 w-full"
+                      className="col-span-3 text-[18px] p-2 w-full"
                     >
                       <option value="">Select an option</option>
                       {field.options.map((option) => (
-                        <option value={option.value}>{option.label}</option>
+                        <option
+                          selected={option.value === field.value}
+                          value={option.value}
+                        >
+                          {option.label}
+                        </option>
                       ))}
                     </select>
                   )}
@@ -313,13 +464,13 @@ function EditComponent(props) {
 
                   {/* Checkbox */}
                   {field.type === "checkbox" && (
-                    <div className="col-span-3 flex gap-2 w-full">
+                    <div className="col-span-3 flex flex-wrap gap-2 w-full">
                       {field.options.map((option) => (
                         <label className="flex items-center gap-2">
                           <input
                             type="checkbox"
                             name={field.name}
-                            checked={option.value === field.value}
+                            checked={field.value.includes(option.value)}
                             required={field.required}
                           />
                           <span>{option.label}</span>
@@ -372,6 +523,9 @@ function EditComponent(props) {
 
           {/* End Modal  */}
         </div>
+        {/* End Survey Fields  */}
+
+        {/* Question section  */}
         {props.attributes.questions.map((question, index) => (
           <div key={index} className="bg-gray-200 p-4">
             <input
@@ -401,7 +555,7 @@ function EditComponent(props) {
               <div className="flex justify-between gap-4 items-center">
                 <select
                   onChange={(e) => changeQuestionType(e, index)}
-                  className="h-[45px] text-[18px] p-2"
+                  className=" text-[18px] p-2"
                 >
                   <option value="">Change Question type</option>
                   <option selected={question.type == "radio"} value="radio">
@@ -454,7 +608,7 @@ function EditComponent(props) {
             <select
               required
               onChange={(e) => setQuestionType(e.target.value)}
-              className="h-[45px] text-[18px] p-2"
+              className="text-[18px] p-2"
             >
               <option value="">Select Question type</option>
               <option value="radio">Radio</option>

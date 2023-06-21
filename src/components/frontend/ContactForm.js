@@ -3,94 +3,87 @@ import React from "react";
 const ContactForm = ({ data, onChange }) => {
   return (
     <div className="flex flex-col gap-3 p-4">
-      <div className="flex flex-col sm:flex-row gap-4 items-center justify-items-center">
-        <input
-          type="text"
-          name="first_name"
-          placeholder="First Name"
-          value={data.first_name}
-          onChange={onChange}
-          className="w-full p-3"
-          required
-        />
-        <select
-          className="w-full h-[50px] px-2"
-          name="country"
-          onChange={onChange}
-        >
-          <option>Select your country</option>
-          <option selected={data.country === "india"} value="india">
-            India
-          </option>
-          <option selected={data.country === "usa"} value="usa">
-            USA
-          </option>
-          <option selected={data.country === "uk"} value="uk">
-            UK
-          </option>
-        </select>
-      </div>
-      <div className="flex flex-col sm:flex-row justify-center gap-4 items-center">
-        <input
-          type="text"
-          name="last_name"
-          placeholder="Last Name"
-          value={data.last_name}
-          onChange={onChange}
-          className="w-full p-3"
-        />
-        <input
-          type="number"
-          name="increment"
-          value={data.increment}
-          onChange={onChange}
-          placeholder="0"
-          className="w-full p-3"
-        />
-      </div>
-      <div className="flex w-full flex-col sm:flex-row justify-center gap-4 items-center">
-        <div className="w-full sm:w-1/2">
-          <input
-            type="email"
-            name="email"
-            value={data.email}
-            onChange={onChange}
-            placeholder="Your Email"
-            className="w-full p-3"
-          />
-        </div>
-        <div className="w-full sm:w-1/2 flex flex-col sm:flex-row gap-4">
-          <input
-            type="number"
-            name="age"
-            placeholder="Age"
-            value={data.increment}
-            onChange={onChange}
-            className="p-3 w-full sm:w-1/3"
-          />
-          <div className="flex gap-4">
-            <label className="flex gap-2 items-center cursor-pointer">
-              <input
-                type="radio"
-                name="gender"
-                value="male"
-                checked={data.gender === "male"}
-                onChange={onChange}
-              />
-              <span>Male</span>
-            </label>
-            <label className="flex gap-2 items-center cursor-pointer">
-              <input
-                type="radio"
-                name="gender"
-                value="female"
-                checked={data.gender === "female"}
-                onChange={onChange}
-              />
-              <span>Female</span>
-            </label>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {data.fields.map((field, index) =>
+          field.type === "text" ||
+          field.type === "email" ||
+          field.type === "number" ||
+          field.type === "tel" ? (
+            <input
+              type={field.type}
+              name={field.name}
+              placeholder={field.label}
+              value={field.value}
+              onChange={onChange}
+              className="w-full p-3"
+              required={field.required}
+            />
+          ) : field.type === "select" ? (
+            <select
+              className="w-full h-[50px] px-2"
+              name={field.name}
+              onChange={onChange}
+              required={field.required}
+            >
+              <option value="">{field.label}</option>
+              {field.options.map((option, index) => (
+                <option
+                  selected={field.value === option.value}
+                  value={option.value}
+                >
+                  {" "}
+                  {option.label}{" "}
+                </option>
+              ))}
+            </select>
+          ) : field.type === "radio" ? (
+            <div className="flex gap-4 items-center">
+              <label className="text-sm">{field.label}</label>
+              <div className="flex gap-4">
+                {field.options.map((option, index) => (
+                  <label className="flex gap-2 items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name={field.name}
+                      value={option.value}
+                      checked={field.value === option.value}
+                      onChange={onChange}
+                      required={field.required}
+                    />
+                    <span>{option.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          ) : field.type === "checkbox" ? (
+            <div className="flex gap-4 items-center">
+              <label className="text-sm">{field.label}</label>
+              <div className="flex gap-4 flex-wrap">
+                {field.options.map((option, index) => (
+                  <label className="text-sm flex gap-2 items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name={field.name}
+                      value={option.value}
+                      checked={field.value.includes(option.value)}
+                      onChange={onChange}
+                      required={field.required && field.value.length === 0}
+                    />
+                    <span>{option.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          ) : field.type === "textarea" ? (
+            <textarea
+              name={field.name}
+              defaultValue={field.value}
+              rows={3}
+              onChange={onChange}
+              placeholder={field.placeholder}
+            />
+          ) : null
+        )}
       </div>
     </div>
   );
